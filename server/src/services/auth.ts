@@ -54,8 +54,13 @@ export const loginHandler = async (req: RequestObject, res: Response, next: Next
 		if(user) {
 			const isPasswordValid = await bcrypt.compare(password, user?.passwordHash || '')
 			if (isPasswordValid) {
-				const token = await signToken({ id: user.id, email: user.email, name: user.name })
-				return res.status(200).json({ token })
+				const userPayload = {
+					id: user.id,
+					email: user.email,
+					name: user.name,
+				}
+				const token = await signToken(userPayload)
+				return res.status(200).json({ token, user: userPayload })
 			}
 
 			next(new HttpException(400, 'Invalid email or password', {}))

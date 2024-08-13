@@ -18,7 +18,15 @@ export const getAllOrdersHandler = async (req: RequestObject, res: Response, nex
 				userId,
 			},
 			include: {
-				orderItems: true,
+				orderItems: {
+					include: {
+						product: {
+							select: {
+								name: true,
+							}
+						}
+					}
+				},
 				address: true,
 			},
 			orderBy: {
